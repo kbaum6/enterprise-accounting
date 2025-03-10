@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinancePro - Complete Accounting Solution</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #334155;
+            background-color: #f1f5f9;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active {
+            background-color: var(--primary);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #cbd5e1;
+            width: 300px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+        
+        .tab-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-item.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 0.5rem;
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .tab-content {
+            margin-top: 2rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <span>FinancePro</span>
+            </div>
+            <div class="nav-item active">Dashboard</div>
+            <div class="nav-item">Banking</div>
+            <div class="nav-item">Accounting</div>
+            <div class="nav-item">Payroll</div>
+            <div class="nav-item">Invoicing</div>
+            <div class="nav-item">Expenses</div>
+            <div class="nav-item">Reports</div>
+            <div class="nav-item">Taxes</div>
+            <div class="nav-item">Projects</div>
+            <div class="nav-item">Settings</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="top-bar">
+                <input type="text" class="search-box" placeholder="Search transactions, invoices, reports...">
+                <div class="user-info">
+                    <div class="notifications">
+                        📬
+                    </div>
+                    <div class="user-avatar">
+                        JD
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-value">$24,385.42</div>
+                    <div class="stat-label">Cash Flow (MTD)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$12,894.50</div>
+                    <div class="stat-label">Outstanding Receivables</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$8,459.75</div>
+                    <div class="stat-label">Outstanding Payables</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$118,523.68</div>
+                    <div class="stat-label">Revenue (YTD)</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Banking Overview</div>
+                    <button class="btn btn-primary">Connect Account</button>
+                </div>
+                
+                <div class="tab-nav">
+                    <div class="tab-item active">Connected Accounts</div>
+                    <div class="tab-item">Recent Transactions</div>
+                    <div class="tab-item">Pending</div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Type</th>
+                            <th>Current Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Business Checking</td>
+                            <td>Checking</td>
+                            <td>$28,456.32</td>
+                            <td><span class="badge badge-success">Connected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Business Savings</td>
+                            <td>Savings</td>
+                            <td>$75,230.18</td>
+                            <td><span class="badge badge-success">Connected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Merchant Account</td>
+                            <td>Credit Card</td>
+                            <td>$4,582.93</td>
+                            <td><span class="badge badge-warning">Update Required</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Invoices</div>
+                    <button class="btn btn-primary">New Invoice</button>
+                </div>
+                
+                <div class="tab-nav">
+                    <div class="tab-item active">Unpaid</div>
+                    <div class="tab-item">Paid</div>
+                    <div class="tab-item">Overdue</div>
+                    <div class="tab-item">Drafts</div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Due Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INV-2025-042</td>
+                            <td>Acme Industries</td>
+                            <td>Feb 28, 2025</td>
+                            <td>Mar 30, 2025</td>
+                            <td>$4,500.00</td>
+                            <td><span class="badge badge-warning">Unpaid</span></td>
+                        </tr>
+                        <tr>
+                            <td>INV-2025-039</td>
+                            <td>TechSolutions Inc.</td>
+                            <td>Feb 15, 2025</td>
+                            <td>Mar 15, 2025</td>
+                            <td>$2,750.00</td>
+                            <td><span class="badge badge-warning">Unpaid</span></td>
+                        </tr>
+                        <tr>
+                            <td>INV-2025-036</td>
+                            <td>Global Services Ltd.</td>
+                            <td>Feb 10, 2025</td>
+                            <td>Mar 10, 2025</td>
+                            <td>$5,200.00</td>
+                            <td><span class="badge badge-danger">Overdue</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Payroll Module -->
+            <div id="payroll-module" class="hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Payroll Overview</div>
+                        <button class="btn btn-primary">Run Payroll</button>
+                    </div>
+                    
+                    <div class="tab-nav">
+                        <div class="tab-item active">Upcoming</div>
+                        <div class="tab-item">History</div>
+                        <div class="tab-item">Employees</div>
+                        <div class="tab-item">Tax Forms</div>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div class="payroll-summary">
+                            <div class="card-header">
+                                <div class="card-title">Next Payroll: March 15, 2025</div>
+                            </div>
+                            
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Gross Pay</td>
+                                        <td>$28,450.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Federal Taxes</td>
+                                        <td>$4,267.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>State Taxes</td>
+                                        <td>$1,422.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Benefits & Deductions</td>
+                                        <td>$2,134.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Net Pay</strong></td>
+                                        <td><strong>$20,626.00</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Transaction Modal -->
+    <div class="modal-backdrop hidden" id="new-transaction-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">New Transaction</div>
+                <button class="close-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Transaction Type</label>
+                    <select class="form-control">
+                        <option>Expense</option>
+                        <option>Income</option>
+                        <option>Transfer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" value="2025-03-10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount</label>
+                    <input type="number" class="form-control" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account</label>
+                    <select class="form-control">
+                        <option>Business Checking</option>
+                        <option>Business Savings</option>
+                        <option>Merchant Account</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control">
+                        <option>Office Supplies</option>
+                        <option>Rent</option>
+                        <option>Utilities</option>
+                        <option>Salaries</option>
+                        <option>Marketing</option>
+                        <option>Equipment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control" placeholder="Enter description">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Attach Receipt</label>
+                    <input type="file" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary">Save Transaction</button>
+                <button class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple interactivity for the demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show appropriate module
+                    if (this.textContent === 'Payroll') {
+                        document.getElementById('payroll-module').classList.remove('hidden');
+                    } else {
+                        document.getElementById('payroll-module').classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Tab navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const siblings = Array.from(this.parentNode.children);
+                    siblings.forEach(sib => sib.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Modal handling (simplified for demo)
+            const newTransactionBtn = document.querySelector('.btn-primary');
+            const modal = document.getElementById('new-transaction-modal');
+            const closeModalBtn = document.querySelector('.close-modal');
+            
+            newTransactionBtn.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+            });
+            
+            closeModalBtn.addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
